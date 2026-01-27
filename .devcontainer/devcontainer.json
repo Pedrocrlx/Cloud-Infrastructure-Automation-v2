@@ -1,0 +1,38 @@
+{
+    "name": "SaaS Platform v2 - Dev Environment",
+    "image": "mcr.microsoft.com/devcontainers/base:bullseye",
+
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "enableNonRootDocker": "true",
+            "moby": "true"
+        },
+		/* Installs kubectl, helm, and minikube automatically */
+        "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+            "version": "latest",
+            "minikube": "latest",
+            "helm": "latest"
+        },
+		/* Infrastructure as Code tool */
+        "ghcr.io/devcontainers/features/terraform:1": {},
+        
+        /*Using Python 3.12 for better performance */
+        "ghcr.io/devcontainers/features/python:1": {
+            "version": "3.12"
+        }
+    },
+	/* VS Code Extensions for productivity */
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "hashicorp.terraform",
+                "ms-kubernetes-tools.vscode-kubernetes-tools",
+                "ms-azuretools.vscode-docker",
+                "ms-python.python",
+                "redhat.vscode-yaml"
+            ]
+        }
+    },
+	/* Grants full admin permissions inside the container */
+    "remoteUser": "root"
+}
