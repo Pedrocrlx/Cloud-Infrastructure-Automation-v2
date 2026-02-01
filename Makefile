@@ -1,7 +1,7 @@
 # Variables
 SHELL := /bin/bash
 
-# Targets
+# --- Application ---
 .PHONY: build run test clean
 
 build: ## Build the Docker image
@@ -20,3 +20,34 @@ test: ## Simple curl test
 clean: ## Remove local containers
 	@docker rm -f saas-app-container 2>/dev/null || true
 	@echo "[INFO] Cleaned up containers."
+
+# --- Infrastructure (Terraform & Minikube) ---
+.PHONY: cluster-start cluster-stop infra-init infra-plan infra-apply infra-destroy
+
+cluster-start: ## Start Minikube if not running
+	@if ! minikube status > /dev/null 2>&1; then \
+		echo "[INFO] Starting Minikube Cluster..."; \
+		minikube start --driver=docker; \
+		echo "[INFO] Cluster is ready."; \
+	else \
+		echo "[INFO] Minikube is already running."; \
+	fi
+
+cluster-stop: ## Stop Minikube
+	@minikube stop
+	@echo "[INFO] Cluster stopped."
+
+infra-init: cluster-start ## Initialize Terraform (Starts cluster first)
+	@echo "[INFO] Initializing Terraform..."
+	@cd infra && terraform init
+
+infra-plan: cluster-start ## Plan Terraform changes
+	@echo "[INFO] Planning Infrastructure..."
+	@cd infra && terraform plan
+
+infra-apply: cluster-start ## Apply Terraform (Starts cluster first)
+	@echo "[INFO] Applying Infrastructure..."
+	@cd infra && terraform apply -auto-approve
+
+infra-destroy: ## Destroy infrastructure resources
+	@cd infra && terraform destroy -auto-approve
