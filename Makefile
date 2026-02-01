@@ -24,10 +24,15 @@ clean: ## Remove local containers
 # --- Infrastructure (Terraform & Minikube) ---
 .PHONY: cluster-start cluster-stop infra-init infra-plan infra-apply infra-destroy
 
+image-load: ## Load local image into Minikube
+	@echo "[INFO] Loading image into Minikube..."
+	@minikube image load saas-app:local
+	@echo "[INFO] Image loaded."	
+	
 cluster-start: ## Start Minikube if not running
 	@if ! minikube status > /dev/null 2>&1; then \
 		echo "[INFO] Starting Minikube Cluster..."; \
-		minikube start --driver=docker; \
+		minikube start --driver=docker --force; \
 		echo "[INFO] Cluster is ready."; \
 	else \
 		echo "[INFO] Minikube is already running."; \
@@ -51,3 +56,4 @@ infra-apply: cluster-start ## Apply Terraform (Starts cluster first)
 
 infra-destroy: ## Destroy infrastructure resources
 	@cd infra && terraform destroy -auto-approve
+	minikube delete --all

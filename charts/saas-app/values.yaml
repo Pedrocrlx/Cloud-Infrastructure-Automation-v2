@@ -1,0 +1,27 @@
+# Default values for saas-app.
+
+replicaCount: 1
+
+image:
+  repository: saas-app
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "local"
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 5000
+
+resources: 
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+# Environment variables to inject into the container
+env:
+  APP_VERSION: "1.0.0-helm"
+  # PORT is injected automatically by the Deployment template based on targetPort

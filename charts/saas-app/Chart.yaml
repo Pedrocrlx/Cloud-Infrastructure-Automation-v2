@@ -1,0 +1,8 @@
+apiVersion: v2
+name: saas-app
+description: A Helm chart for the SaaS Platform dummy application
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+maintainers:
+  - name: DevOps Team
