@@ -63,5 +63,24 @@ The application validates the orchestration, not business logic. It must expose:
 * **Goal:** GitHub Actions orchestrates the scripts and Helm deployment.
 * **Output:** `git push` to main -> Automatic Deployment.
 
-## 6. Definition of Done (DoD)
-The project is complete when a single line of code is changed in the Python application, pushed to Git, and the change is reflected in the browser at a local URL (e.g., `app.dev.local`) without any manual terminal interaction.
+## 6. Definition of Done (DoD) - Phase v2 (CI & Orchestration Foundation)
+
+The current phase (v2) is considered complete when the following criteria are met:
+
+1.  **Reproducible Development Environment:**
+    * Any developer can clone the repository and start working immediately using VS Code DevContainers, with all dependencies (Terraform, Docker, Helm, Minikube) pre-configured.
+
+2.  **Infrastructure as Code (IaC):**
+    * Terraform successfully provisions the base cluster resources (Namespaces `dev` and `prod`) without manual intervention.
+    * `make infra-apply` is the only command required to set up the logical infrastructure.
+
+3.  **Automated Continuous Integration (CI):**
+    * A `git push` to the `main` branch automatically triggers a GitHub Actions pipeline.
+    * The pipeline successfully lints the code, builds the Docker image, and pushes a versioned artifact to the **GitHub Container Registry (GHCR)**.
+
+4.  **Standardized Packaging (Helm):**
+    * The application is packaged as a Helm Chart (`charts/saas-app`).
+    * The application can be deployed to the local cluster using `helm install` and successfully enters the `Running` state.
+    * The application responds to health checks (`/health`) via port-forwarding.
+
+*(Note: Automated Continuous Deployment (CD) and Ingress configuration are explicitly scoped for Phase v3 - GitOps Implementation).*
