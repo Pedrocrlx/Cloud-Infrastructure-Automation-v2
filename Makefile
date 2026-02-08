@@ -19,10 +19,37 @@ test: ## Simple curl test
 
 clean: ## Remove local containers
 	@docker rm -f saas-app-container 2>/dev/null || true
-	@echo "[INFO] Cleaned up containers."
+	@docker rmi saas-app:local 2>/dev/null || true
+	helm uninstall app-test -n dev
+	@echo "[INFO] Cleaned up containers and images from Docker."
 
 # --- Infrastructure (Terraform & Minikube) ---
 .PHONY: cluster-start cluster-stop infra-init infra-plan infra-apply infra-destroy
+	
+setup: ## Setup environment
+	@echo "[INFO] Setting up environment..."
+	@make clean
+	@make build
+	@make cluster-start
+	@make image-load
+	@make infra-init
+	@make infra-plan
+	@make infra-apply
+	helm lint charts/saas-app/
+	helm install app-test charts/saas-app/ --namespace dev
+	@echo "[INFO] Environment setup complete."
+	
+tests: ## Run tests
+	@echo "[INFO] Running tests..."
+	kubectl get all -A
+	kubectl get pods -n dev
+	kubectl port-forward -n dev svc/app-test 8080:80
+	@echo "[INFO] Tests complete."
+	
+curl: ## Run curl commands
+	curl -s http://localhost:8080/
+	curl -s http://localhost:8080/health
+	curl -s http://localhost:8080/config
 
 image-load: ## Load local image into Minikube
 	@echo "[INFO] Loading image into Minikube..."
@@ -57,3 +84,4 @@ infra-apply: cluster-start ## Apply Terraform (Starts cluster first)
 infra-destroy: ## Destroy infrastructure resources
 	@cd infra && terraform destroy -auto-approve
 	minikube delete --all
+
