@@ -77,3 +77,59 @@ This project introduces advanced DevOps patterns that complement the previous wo
 ├── LICENSE             # License for the project
 ├── Makefile            # The Command Center (Automation)
 └── README.md           # This documentation
+```
+
+---
+
+## Getting Started
+
+Prerequisites: Docker and VS Code or your preferred IDE (with DevContainers extension or CLI). Everything else is installed automatically inside the container.
+1. Initialize the Environment
+
+Open the project in Your IDE. When prompted, click "Reopen in Container" or use the DevContainers CLI "devcontainer up and then -> devcontainer exec --workspace-folder . bash". Once inside the terminal, the environment is fully configured.
+2. The One-Command Setup
+
+We use a Makefile to abstract complexity. You don't need to memorize kubectl or terraform commands.
+
+## Setup
+
+```bash
+make setup ## Initializes Terraform, starts Minikube, and creates the Namespaces (dev, prod).
+```
+
+## Validation
+
+```bash
+make tests ## Show pods running.
+```
+
+## Tunnel (run in another terminal but make sure you are inside of devcontainer)
+
+```bash
+make tunnel ## Exposes the cluster on localhost:8080.
+```
+
+## Final Test
+
+```bash
+make curl ## Curl the cluster on localhost:8080.
+```
+
+## Cleanup
+
+```bash
+make infra-destroy ## Stops Minikube and deletes the Namespaces (dev, prod).
+make clean ## Removes the Terraform state files, Docker images, containers, and Helm releases.
+```
+
+## Future Roadmap
+
+- GitOps Implementation: Integrate ArgoCD to automatically sync the cluster state with this repository, removing the need for manual helm install commands.
+
+- Observability: Implement Prometheus & Grafana stacks via Terraform to monitor application metrics.
+
+- Multi-Tenancy: Evolve the Helm Chart to support dynamic "Per-Client" deployments driven by external configuration files.
+
+## Author
+
+Pedro Santos - Cloud & DevOps Engineer in Training.
