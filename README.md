@@ -19,6 +19,7 @@ To simulate a real-world SaaS Platform setup where:
 3. Deployment is versioned, packaged, and automated via Continuous Integration.
 
 ---
+<img width="1561" height="444" alt="Screenshot 2026-02-08 012807" src="https://github.com/user-attachments/assets/2a7e94b5-e6f4-4288-bdf6-b63bfd41c5eb" />
 
 ## Architectural Evolution
 
